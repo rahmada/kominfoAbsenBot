@@ -37,6 +37,12 @@ def absenIn():
     rambah.type(password,into='Password', id="LoginForm_password")
     rambah.click(text='LOGIN')
     time.sleep(5)
+    if(rambah.find_elements(text="OK")):
+        print("Ada")
+        rambah.click(text="OK")
+    else:
+        print("Nggak ada")
+    time.sleep(5)
     rambah.click(text='e-presensi')
     time.sleep(5)
     rambah.switch_to_tab(2)
@@ -67,6 +73,12 @@ def absenOut():
     rambah.type(password,into='Password', id="LoginForm_password")
     rambah.click(text='LOGIN')
     time.sleep(5)
+    if(rambah.find_elements(text="OK")):
+        print("Ada")
+        rambah.click(text="OK")
+    else:
+        print("Nggak ada")
+    time.sleep(5)
     rambah.click(text='e-presensi')
     time.sleep(5)
     rambah.switch_to_tab(2)
@@ -86,7 +98,7 @@ def absenOut():
     print("Checking out success...")
     rambah.quit()
 
-#absenOut()
+#absenIn()
 
 #randomize();
 #print(alarm1)
@@ -112,5 +124,6 @@ while True:
         print("waktu out : "+alarm2)
         print("   ")
     else:
-        print('waktu saat ini ',waktu,alarmNote,end='\r')
+        #print('waktu saat ini ',waktu,alarmNote,end='\r')
+        print('waktu saat ini ',waktu,alarmNote)
     time.sleep(1)
