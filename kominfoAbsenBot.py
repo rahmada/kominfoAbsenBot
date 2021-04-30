@@ -41,7 +41,12 @@ def absenIn():
         print("Ada")
         rambah.click(text="OK")
     else:
-        print("Nggak ada")
+        print("Nggak ada OK")
+    if(rambah.find_elements(text="Baiklah")):
+        print("Ada")
+        rambah.click(text="Baiklah")
+    else:
+        print("Nggak ada Baiklah")
     time.sleep(5)
     rambah.click(text='e-presensi')
     time.sleep(5)
@@ -78,6 +83,11 @@ def absenOut():
         rambah.click(text="OK")
     else:
         print("Nggak ada")
+    if(rambah.find_elements(text="Baiklah")):
+        print("Ada")
+        rambah.click(text="Baiklah")
+    else:
+        print("Nggak ada Baiklah")
     time.sleep(5)
     rambah.click(text='e-presensi')
     time.sleep(5)
