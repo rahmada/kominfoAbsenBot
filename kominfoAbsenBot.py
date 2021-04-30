@@ -134,6 +134,6 @@ while True:
         print("waktu out : "+alarm2)
         print("   ")
     else:
-        #print('waktu saat ini ',waktu,alarmNote,end='\r')
-        print('waktu saat ini ',waktu,alarmNote)
+        print('waktu saat ini ',waktu,alarmNote,end='\r')
+        #print('waktu saat ini ',waktu,alarmNote)
     time.sleep(1)
