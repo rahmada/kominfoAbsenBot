@@ -79,6 +79,17 @@ def absenOut():
 #randomize();
 #print(alarm1)
 #print(alarm2)
+sekarang = datetime.now()
+jam = sekarang.strftime("%H")
+menit = sekarang.strftime("%M")
+detik = sekarang.strftime("%S")
+waktu = jam+":"+menit+":"+detik
+alarmNote=""
+randomize()
+print("Randomizing Time...")
+print("waktu In : " +alarm1)
+print("waktu out : "+alarm2)
+print("   ")
 
 while True:
     sekarang = datetime.now()
@@ -100,6 +111,6 @@ while True:
         print("waktu out : "+alarm2)
         print("   ")
     else:
-        #print('waktu saat ini ',waktu,alarmNote,end='\r')
-        print('waktu saat ini ',waktu,alarmNote)
+        print('waktu saat ini ',waktu,alarmNote,end='\r')
+        #print('waktu saat ini ',waktu,alarmNote)
     time.sleep(1)
