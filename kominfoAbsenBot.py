@@ -48,7 +48,7 @@ def absenIn(username,password):
     except:
         print("Elemen/button tidak ditemukan!")
     
-     driver.close()
+    driver.close()
     
 def absenOut(username,password):
     s=Service(ChromeDriverManager().install())
