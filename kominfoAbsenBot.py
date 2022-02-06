@@ -1,116 +1,129 @@
-from datetime import datetime
-from webbot import Browser
-import time
 import random
+import datetime as dt
+import time
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
 
-waktuawal="06:00:00"
-waktuakhir="15:00:00"
-alarm1=waktuawal
-alarm2=waktuakhir
-randomTime="00:22:00"
-username = "riko001"
-password = "myAkbar221018!"
+def rnd_minute(waktu):
+    date_awal = dt.datetime.combine(dt.datetime.today(),waktu)
+    return date_awal + dt.timedelta(minutes=random.randint(1,59))
 
-def randomize():
-    global alarm1
-    global alarm2
-    addMinute=random.randint(10,59)
-    arrayTime=alarm1.split(":")
-    addMinute=addMinute+int(arrayTime[1])
-    arrayTime[1]=str(addMinute)
-    alarm1 = ":".join(arrayTime)
-    addMinute=random.randint(10,59)
-    arrayTime=alarm2.split(":")
-    addMinute=addMinute+int(arrayTime[1])
-    arrayTime[1]=str(addMinute)
-    alarm2 = ":".join(arrayTime)
+def absenIn(username,password):
+    s=Service(ChromeDriverManager().install())
+    driver = webdriver.Chrome(service=s)
+    driver.set_page_load_timeout(10)
+    #portal login
+    portal_login(driver,username,password)
+    time.sleep(1)
+    
+    #insert check health here
+    try:
+        driver.get("https://apik.kominfo.go.id/index.php/screeningCovid")
+        time.sleep(1)
+        driver.find_element_by_id("ScreeningCovid_answer_1_0").click()
+        time.sleep(1)
+        driver.find_element_by_id("ScreeningCovid_answer_2_0").click()
+        time.sleep(1)
+        driver.find_element_by_id("ScreeningCovid_answer_3_0").click()
+        time.sleep(1)
+        driver.find_element_by_name("yt0").click()
+        time.sleep(1)
+    except:
+        print("Cek Kesehatan Gagal")
+    
+    #insert check in here
+    driver.get("https://portal.kominfo.go.id/site/mypreauth/id/apik")
+    time.sleep(1)
+    try:
+        driver.find_element_by_id("checkin").click()
+        time.sleep(1)
+        driver.find_element(By.XPATH, '//button[text()="OK"]').click()
+        time.sleep(1)
+        driver.find_element_by_name("swal2-radio").click()
+        time.sleep(1)
+        print ("Check-in Sukses")
+    except:
+        print("Elemen/button tidak ditemukan!")
+    
+     driver.close()
+    
+def absenOut(username,password):
+    s=Service(ChromeDriverManager().install())
+    driver = webdriver.Chrome(service=s)
+    driver.set_page_load_timeout(10)
+    
+    #portal login
+    portal_login(driver,username,password)
 
+    #insert check out here
+    time.sleep(1)
+    try:
+        driver.find_element_by_id("checkout").click()
+        time.sleep(1)
+        driver.find_element(By.XPATH, '//button[text()="OK"]').click()
+        time.sleep(1)
+        driver.find_element(By.XPATH, '//button[text()="Sesuai"]').click()
+        time.sleep(1)
+    except:
+        print("Elemen/button tidak ditemukan!")
+        
+    driver.close()
 
+def portal_login(ddriver,uusername,ppassword):
+    ddriver.get("https://portal.kominfo.go.id")
+    user_form = ddriver.find_element_by_id("LoginForm_username")
+    user_form.clear()
+    user_form.send_keys(uusername)
+    user_form = ddriver.find_element_by_id("LoginForm_password")
+    user_form.clear()
+    user_form.send_keys(ppassword)
+    user_form.send_keys(Keys.ENTER) 
+    time.sleep(1)
+    ddriver.get("https://portal.kominfo.go.id/site/mypreauth/id/apik")
+    time.sleep(1)
+    
+    #insert check title here
+    while (ddriver.title!="Absensi Elektronik KOMINFO - Site"):
+        print("Judul nggak cocok, refresh...")
+        driver.get("https://portal.kominfo.go.id/site/mypreauth/id/apik")
+    print("Judul cocok.. lanjut proses..")
 
-def absenIn():
-    print(" ")
-    print("Checking In...")
-    rambah = Browser()
-    rambah.go_to("https://portal.kominfo.go.id")
-    rambah.type(username,into='Username', id="LoginForm_username")
-    rambah.type(password,into='Password', id="LoginForm_password")
-    rambah.click(text='LOGIN')
-    time.sleep(5)
-    rambah.go_to("https://portal.kominfo.go.id/site/mypreauth/id/apik")
-    judul = rambah.get_title()
-    print(judul[0:7]+" Ini Judul")
-    while (judul[0:7]!="Absensi"):
-        print("Judul nggak cocok!)")
-        rambah.go_to("https://portal.kominfo.go.id/site/mypreauth/id/apik")
-        time.sleep(5)
-        judul = rambah.get_title()
-    rambah.click(text='CHECK-IN')
-    rambah.click(text='OK')
-    rambah.click(text='Kantor')
-    rambah.click(text='Sesuai')
-    print("Checking in success..")
-    rambah.quit()
+#time_variable
+wkt_datang = dt.time(6,0,0)
+wkt_pulang = dt.time(16,35,0)
+wkt_chday = dt.time(1,0,0)
+date_datang = dt.datetime.combine(dt.datetime.today(),wkt_datang)
+date_pulang = dt.datetime.combine(dt.datetime.today(),wkt_pulang)
+date_chday = dt.datetime.combine(dt.datetime.today(),wkt_chday)
 
-def absenOut():
-    print(" ")
-    print("Checking Out...")
-    rambah = Browser()
-    rambah.go_to("https://portal.kominfo.go.id")
-    rambah.type(username,into='Username', id="LoginForm_username")
-    rambah.type(password,into='Password', id="LoginForm_password")
-    rambah.click(text='LOGIN')
-    time.sleep(5)
-    rambah.go_to("https://portal.kominfo.go.id/site/mypreauth/id/apik")
-    judul = rambah.get_title()
-    print(judul[0:7]+" Ini Judul")
-    while (judul[0:7]!="Absensi"):
-        print("Judul nggak cocok!)")
-        rambah.go_to("https://portal.kominfo.go.id/site/mypreauth/id/apik")
-        time.sleep(5)
-        judul = rambah.get_title()
-    rambah.click(text='CHECK-OUT')
-    rambah.click(text='OK')
-    rambah.click(text='Sesuai')
-    print("Checking out success...")
-    rambah.quit()
+#username password
+user = "riko001"
+passwd = "myAkbar221018!"
 
-#absenIn()
-
-#randomize();
-#print(alarm1)
-#print(alarm2)
-sekarang = datetime.now()
-jam = sekarang.strftime("%H")
-menit = sekarang.strftime("%M")
-detik = sekarang.strftime("%S")
-waktu = jam+":"+menit+":"+detik
-alarmNote=""
-randomize()
-print("Randomizing Time...")
-print("waktu In : " +alarm1)
-print("waktu out : "+alarm2)
-print("   ")
+#randomize pulang & datang
+date_datang=rnd_minute(wkt_datang)
+date_pulang=rnd_minute(wkt_pulang)
+print("Tanggal : ", dt.datetime.today().strftime("%d/%m/%y")," Datang : ", date_datang.strftime("%H:%M:%S")," Pulang : ", date_pulang.strftime("%H:%M:%S") )
 
 while True:
-    sekarang = datetime.now()
-    jam = sekarang.strftime("%H")
-    menit = sekarang.strftime("%M")
-    detik = sekarang.strftime("%S")
-    waktu = jam+":"+menit+":"+detik
-    alarmNote=""
-    if (waktu==alarm1):
-        absenIn()
-    elif (waktu==alarm2):
-        absenOut()
-    elif(waktu==randomTime):
-        alarm1=waktuawal
-        alarm2=waktuakhir
-        randomize()
-        print("Randomizing Time...")
-        print("waktu In : " +alarm1)
-        print("waktu out : "+alarm2)
-        print("   ")
-    else:
-        print('waktu saat ini ',waktu,alarmNote,end='\r')
-        #print('waktu saat ini ',waktu,alarmNote)
+    date_skrg = dt.datetime.today()    
+   
+    #print every seconds
+    print(date_skrg.strftime("%H:%M:%S"),end='\r')
     time.sleep(1)
+    
+    #if its hit waktu datang & waktu pulang & ganti hari
+    if (date_skrg.strftime("%H:%M:%S") == date_datang.strftime("%H:%M:%S")) : #waktu datang
+        print("Waktu Absen Masuk!")
+        absenIn(user,passwd)
+    elif (date_skrg.strftime("%H:%M:%S") == date_pulang.strftime("%H:%M:%S")) : #waktu pulang
+        print("Waktu Absen Pulang!")
+    elif (date_skrg.strftime("%H:%M:%S") == date_chday.strftime("%H:%M:%S")) : #ganti hari, randomize waktu masuk dan pulang
+        print("Tengah malam, randomizing new time")
+        date_datang=rnd_minute(wkt_datang)
+        date_pulang=rnd_minute(wkt_pulang)
+        print("Tanggal : ", dt.datetime.today().strftime("%d/%m/%y")," Datang : ", date_datang.strftime("%H:%M:%S")," Pulang : ", date_pulang.strftime("%H:%M:%S") )
+    
