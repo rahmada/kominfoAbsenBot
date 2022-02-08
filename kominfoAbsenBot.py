@@ -36,14 +36,16 @@ def absenIn(username,password):
     
     #insert check in here
     driver.get("https://portal.kominfo.go.id/site/mypreauth/id/apik")
-    time.sleep(1)
+    time.sleep(2)
     try:
         driver.find_element_by_id("checkin").click()
-        time.sleep(1)
+        time.sleep(2)
         driver.find_element(By.XPATH, '//button[text()="OK"]').click()
-        time.sleep(1)
+        time.sleep(2)
         driver.find_element_by_name("swal2-radio").click()
-        time.sleep(1)
+        time.sleep(2)
+        driver.find_element_by_xpath('//button[normalize-space()="Sesuai"]').click()
+        time.sleep(2)
         print ("Check-in Sukses")
     except:
         print("Elemen/button tidak ditemukan!")
@@ -104,8 +106,8 @@ user = "riko001"
 passwd = "myAkbar221018!"
 
 #randomize pulang & datang
-date_datang=rnd_minute(wkt_datang)
-date_pulang=rnd_minute(wkt_pulang)
+#date_datang=rnd_minute(wkt_datang)
+#date_pulang=rnd_minute(wkt_pulang)
 print("Tanggal : ", dt.datetime.today().strftime("%d/%m/%y")," Datang : ", date_datang.strftime("%H:%M:%S")," Pulang : ", date_pulang.strftime("%H:%M:%S") )
 
 while True:
@@ -121,6 +123,7 @@ while True:
         absenIn(user,passwd)
     elif (date_skrg.strftime("%H:%M:%S") == date_pulang.strftime("%H:%M:%S")) : #waktu pulang
         print("Waktu Absen Pulang!")
+        absenOut(user,passwd)
     elif (date_skrg.strftime("%H:%M:%S") == date_chday.strftime("%H:%M:%S")) : #ganti hari, randomize waktu masuk dan pulang
         print("Tengah malam, randomizing new time")
         date_datang=rnd_minute(wkt_datang)
