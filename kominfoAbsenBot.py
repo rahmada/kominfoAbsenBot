@@ -103,7 +103,7 @@ date_chday = dt.datetime.combine(dt.datetime.today(),wkt_chday)
 
 #username password
 user = "riko001"
-passwd = "myAkbar221018!"
+passwd = "passwordmudisini"
 
 #randomize pulang & datang
 #date_datang=rnd_minute(wkt_datang)
